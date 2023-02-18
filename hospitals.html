@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <title>Nearby Hospitals</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Nearby Hospitals</h1>
+    {% if hospitals %}
     <ul>
-        {% for result in results %}
-            <li>{{ result.name }} - {{ result.formatted_phone_number }}</li>
-        {% endfor %}
+      {% for hospital in hospitals %}
+      <li>
+        <strong>{{ hospital['name'] }}</strong><br>
+        Phone: {{ hospital['phone'] }}<br>
+        Address: {{ hospital['address'] }}
+      </li>
+      {% endfor %}
     </ul>
-</body>
+    {% else %}
+    <p>No hospitals found within 10km radius.</p>
+    {% endif %}
+  </body>
 </html>
