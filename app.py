@@ -8,7 +8,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/hospitals', methods=['POST'])
+@app.route('/hospitals', methods=['GET'])
 def hospitals():
     lat = request.form['latitude']
     lng = request.form['longitude']
