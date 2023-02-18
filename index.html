@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<head>
+<html>
+  <head>
     <meta charset="utf-8">
-    <title>Find Hospitals</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-    <script>
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        function showPosition(position) {
-            var user_location = position.coords.latitude + "," + position.coords.longitude;
-            document.getElementById("user_location").value = user_location;
-            document.getElementById("location-form").submit();
-        }
-    </script>
-</head>
-<body>
-    <h1>Find Nearby Hospitals</h1>
-    <p>Click the button to get your location and find nearby hospitals:</p>
-    <button onclick="getLocation()">Find Hospitals</button>
-    <form id="location-form" action="/hospitals" method="post">
-        <input type="hidden" id="user_location" name="user_location">
+    <title>Hospital Locator</title>
+  </head>
+  <body>
+    <h1>Hospital Locator</h1>
+    <form method="post" action="{{ url_for('hospitals') }}">
+      <button type="submit">Find Nearby Hospitals</button>
+      <input type="hidden" id="latitude" name="latitude" value="">
+      <input type="hidden" id="longitude" name="longitude" value="">
     </form>
-</body>
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function showPosition(position) {
+        document.getElementById("latitude").value = position.coords.latitude;
+        document.getElementById("longitude").value = position.coords.longitude;
+      }
+
+      window.onload = getLocation;
+    </script>
+  </body>
 </html>
