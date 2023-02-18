@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Nearby Hospitals</title>
+</head>
+<body>
+    <h1>Nearby Hospitals</h1>
+    <ul>
+        {% for result in results %}
+            <li>{{ result.name }} - {{ result.formatted_phone_number }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
