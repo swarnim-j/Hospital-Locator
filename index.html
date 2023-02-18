@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1>Hospital Locator</h1>
-    <form method="get" action="{{ url_for('hospitals') }}">
+    <form method="get" action="{{ url_for('hospitals') | safe }}">
       <button type="submit">Find Nearby Hospitals</button>
       <input type="hidden" id="latitude" name="latitude" value="">
       <input type="hidden" id="longitude" name="longitude" value="">
