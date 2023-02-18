@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Find Hospitals</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            var user_location = position.coords.latitude + "," + position.coords.longitude;
+            document.getElementById("user_location").value = user_location;
+            document.getElementById("location-form").submit();
+        }
+    </script>
+</head>
+<body>
+    <h1>Find Nearby Hospitals</h1>
+    <p>Click the button to get your location and find nearby hospitals:</p>
+    <button onclick="getLocation()">Find Hospitals</button>
+    <form id="location-form" action="/hospitals" method="post">
+        <input type="hidden" id="user_location" name="user_location">
+    </form>
+</body>
+</html>
