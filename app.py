@@ -39,6 +39,11 @@ def call_hospital():
         latitude = request.form['latitude']
         longitude = request.form['longitude']
 
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={api_key}"
+        response = requests.get(url)
+        data = response.json()
+        address = data["results"][0]["formatted_address"]
+
         api_key = current_app.config['GOOGLE_MAPS_API_KEY']
         account_sid = current_app.config['TWILIO_ACCOUNT_SID']
         auth_token = current_app.config['TWILIO_AUTH_TOKEN']
@@ -51,7 +56,7 @@ def call_hospital():
         data = response.json()
         hospital_phone_number = data["result"]["international_phone_number"]
 
-        message = f"Please send an ambulance to {latitude},{longitude}. This is an emergency"
+        message = f"Please send an ambulance to {address}. This is an emergency"
         # message to be changed such that address is sent instead of lat,lng
 
         call = client.calls.create(
