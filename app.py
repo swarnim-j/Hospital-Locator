@@ -39,16 +39,10 @@ def hospitals():
 def call_hospital():
     try:
         with current_app.app_context():
-            print(request.form)
-
             latitude = request.form['latitude']
             longitude = request.form['longitude']
             hospital_place_id = request.form['hospital_place_id']
             hospital_name = request.form['hospital_name']
-
-            print("hello")
-            print(latitude, longitude)
-            print("hi")
 
             api_key = current_app.config['GOOGLE_MAPS_API_KEY']
             account_sid = current_app.config['TWILIO_ACCOUNT_SID']
@@ -61,20 +55,13 @@ def call_hospital():
             data = response.json()
             address = data["results"][0]["formatted_address"]
 
-            print(address)
-            
-            print(hospital_place_id)
-            print(hospital_name)
-
             # phone number of hospital
             url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={hospital_place_id}&fields=international_phone_number&key={api_key}"
             response = requests.get(url)
             data = response.json()
             hospital_phone_number = data["result"]["international_phone_number"]
 
-            print("hello")
             print(hospital_phone_number)
-            print("hi")
 
             message = f"Please send an ambulance as soon as possible to {address}. This is an emergency"
             # TODO: message to be changed such that address is sent instead of lat,lng
