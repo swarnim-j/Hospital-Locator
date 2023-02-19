@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <title>Hospital Locator</title>
   </head>
   <body>
     <h1>Hospital Locator</h1>
-    <form method="get" action="{{ url_for('hospitals') | safe }}">
+    <form id="location-form" method="post" action="{{url_for('hospitals')}}">
       <button type="submit">Find Nearby Hospitals</button>
       <input type="hidden" id="latitude" name="latitude" value="">
       <input type="hidden" id="longitude" name="longitude" value="">
@@ -26,6 +26,14 @@
       }
 
       window.onload = getLocation;
+
+      document.getElementById("location-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the form from submitting
+        getLocation(); // Get the current location
+        setTimeout(function() {
+          document.getElementById("location-form").submit(); // Submit the form after 1 second delay
+        }, 1000);
+      });
     </script>
   </body>
 </html>
