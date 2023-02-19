@@ -53,7 +53,9 @@ def call_hospital():
             url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={api_key}"
             response = requests.get(url)
             data = response.json()
+            print(data['results'])
             address = data["results"][0]["formatted_address"]
+            print(address)
 
             # nearby hospitals
             url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius={radius}&type=hospital&key={api_key}"
@@ -90,7 +92,7 @@ def call_hospital():
             return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, call_made=True)
     except Exception as e:
         print(e)
-        return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, call_made=False)
+        return render_template("hospitals.html", hospitals=[], hospital_place_id=hospital_place_id, call_made=False)
 
         
 
