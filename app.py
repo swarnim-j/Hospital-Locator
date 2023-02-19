@@ -5,8 +5,11 @@ from flask import current_app
 
 app = Flask(__name__)
 
+app.debug = True
+
 app.config['GOOGLE_MAPS_API_KEY'] = os.environ['GOOGLE_MAPS_API_KEY']
 
+radius = 10000
 
 @app.route('/')
 def index():
@@ -18,11 +21,12 @@ def hospitals():
         api_key = current_app.config['GOOGLE_MAPS_API_KEY']
         lat = request.form['latitude']
         lng = request.form['longitude']
-        url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=10000&type=hospital&key="+api_key
+        url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius={radius}&type=hospital&key={api_key}"
         response = requests.get(url)
         data = response.json()
         hospitals = []
         for result in data['results']:
+            print(result)
             hospitals.append({'name': result['name'], 'phone': result.get('formatted_phone_number', 'Phone number not available'), 'address': result.get('vicinity', 'Address not available')})
         return render_template('hospitals.html', hospitals=hospitals)
 
