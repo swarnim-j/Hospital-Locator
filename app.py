@@ -8,6 +8,10 @@ app = Flask(__name__)
 app.config['GOOGLE_MAPS_API_KEY'] = os.environ['GOOGLE_MAPS_API_KEY']
 radius = 10000
 
+app.config['TWILIO_PHONE_NUMBER'] = os.environ['TWILIO_PHONE_NUMBER']
+app.config['TWILIO_ACCOUNT_SID'] = os.environ['TWILIO_ACCOUNT_SID']
+app.config['TWILIO_AUTH_TOKEN'] = os.environ['TWILIO_AUTH_TOKEN']
+
 @app.route('/')
 def index():
     return render_template('index.html')
