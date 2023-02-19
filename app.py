@@ -7,6 +7,8 @@ from twilio.rest import Client
 
 app = Flask(__name__)
 
+app.debug = True
+
 app.config['GOOGLE_MAPS_API_KEY'] = os.environ['GOOGLE_MAPS_API_KEY']
 radius = 10000
 
@@ -24,52 +26,70 @@ def hospitals():
         api_key = current_app.config['GOOGLE_MAPS_API_KEY']
         lat = request.form['latitude']
         lng = request.form['longitude']
+        print(lat, lng)
         url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius={radius}&type=hospital&key={api_key}"
         response = requests.get(url)
         data = response.json()
         hospitals = []
         for result in data['results']:
-            print(result)
-            hospitals.append({'name': result['name'], 'address': result.get('vicinity', 'Address not available')})
-        return render_template('hospitals.html', hospitals=hospitals)
+            hospitals.append({'name': result['name'], 'address': result.get('vicinity', 'Address not available'), 'place_id': result['place_id']})
+        return render_template('hospitals.html', hospitals=hospitals, latitude=lat, longitude=lng)
 
 @app.route('/call_hospital', methods=['POST'])
 def call_hospital():
-    with current_app.app_context():
-        latitude = request.form['latitude']
-        longitude = request.form['longitude']
+    try:
+        with current_app.app_context():
+            print(request.form)
 
-        # reverse geocoding
-        url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={api_key}"
-        response = requests.get(url)
-        data = response.json()
-        address = data["results"][0]["formatted_address"]
+            latitude = request.form['latitude']
+            longitude = request.form['longitude']
+            hospital_place_id = request.form['hospital_place_id']
+            hospital_name = request.form['hospital_name']
 
-        api_key = current_app.config['GOOGLE_MAPS_API_KEY']
-        account_sid = current_app.config['TWILIO_ACCOUNT_SID']
-        auth_token = current_app.config['TWILIO_AUTH_TOKEN']
-        client = Client(account_sid, auth_token)
+            print("hello")
+            print(latitude, longitude)
+            print("hi")
 
-        hospital_place_id = request.form['hospital_place_id']
-        hospital_name = request.form['hospital_name']
-        
-        # phone number of hospital
-        url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={hospital_place_id}&fields=formatted_phone_number,key={api_key}"
-        response = requests.get(url)
-        data = response.json()
-        hospital_phone_number = data["result"]["international_phone_number"]
+            api_key = current_app.config['GOOGLE_MAPS_API_KEY']
+            account_sid = current_app.config['TWILIO_ACCOUNT_SID']
+            auth_token = current_app.config['TWILIO_AUTH_TOKEN']
+            client = Client(account_sid, auth_token)
 
-        message = f"Please send an ambulance to {address}. This is an emergency"
-        # TODO: message to be changed such that address is sent instead of lat,lng
+            # reverse geocoding
+            url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={api_key}"
+            response = requests.get(url)
+            data = response.json()
+            address = data["results"][0]["formatted_address"]
 
-        call = client.calls.create(
-            twiml=f'<Response><Say>{message}</Say></Response>',
-            to='+919411245121', # to=hospital_phone_number,
-            # TODO: hospital number changed to mine so that accidental calls to hospitals are avoided
-            from_=current_app.config['TWILIO_PHONE_NUMBER']
-        )
+            print(address)
+            
+            print(hospital_place_id)
+            print(hospital_name)
 
-        return render_template("hospitals.html", hospital_place_id=hospital_place_id, call_made=True)
+            # phone number of hospital
+            url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={hospital_place_id}&fields=international_phone_number&key={api_key}"
+            response = requests.get(url)
+            data = response.json()
+            hospital_phone_number = data["result"]["international_phone_number"]
+
+            print("hello")
+            print(hospital_phone_number)
+            print("hi")
+
+            message = f"Please send an ambulance as soon as possible to {address}. This is an emergency"
+            # TODO: message to be changed such that address is sent instead of lat,lng
+
+            call = client.calls.create(
+                twiml=f'<Response><Say>{message}</Say></Response>',
+                to='+919411245121', # to=hospital_phone_number,
+                # hospital number changed to mine so that accidental calls to hospitals are avoided
+                from_=current_app.config['TWILIO_PHONE_NUMBER']
+            )
+
+            return render_template("hospitals.html", hospital_place_id=hospital_place_id, call_made=True)
+    except Exception as e:
+        print(e)
+        return render_template("hospitals.html", hospital_place_id=hospital_place_id, call_made=False)
 
         
 
