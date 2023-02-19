@@ -50,7 +50,7 @@ def call_hospital():
         response = requests.get(url)
         data = response.json()
         hospital_phone_number = data["result"]["international_phone_number"]
-        hospital_location = data["result"]["geometry"]["location"]
+        # hospital_location = data["result"]["geometry"]["location"]
 
         message = f"Please send an ambulance to {latitude},{longitude}. This is an emergency"
         # message to be changed such that address is sent instead of lat,lng
