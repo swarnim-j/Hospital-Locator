@@ -10,8 +10,7 @@
     <ul>
       {% for hospital in hospitals %}
       <li>
-        <strong>{{ hospital['name'] }}</strong><br>
-        Phone: {{ hospital['phone'] }}<br>
+        <a href="#" onclick="callHospital('{{ hospital['place_id'] }}')"><strong>{{ hospital['name'] }}</strong></a><br>
         Address: {{ hospital['address'] }}
       </li>
       {% endfor %}
