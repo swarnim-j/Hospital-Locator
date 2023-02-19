@@ -69,7 +69,7 @@ def call_hospital():
             from_=current_app.config['TWILIO_PHONE_NUMBER']
         )
 
-        return render_template("hospitals.html", hospital_name=hospital_name, call_made=True)
+        return render_template("hospitals.html", hospital_place_id=hospital_place_id, call_made=True)
 
         
 
