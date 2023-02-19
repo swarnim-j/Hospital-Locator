@@ -8,8 +8,8 @@
     <h1>Hospital Locator</h1>
     <form method="get" action="{{ url_for('hospitals')}}">
       <button type="submit">Find Nearby Hospitals</button>
-      <input type="hidden" id="latitude" name="latitude" value="">
-      <input type="hidden" id="longitude" name="longitude" value="">
+      <input type="text" id="latitude" name="latitude" value="">
+      <input type="text" id="longitude" name="longitude" value="">
     </form>
     <script>
       function getLocation() {
