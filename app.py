@@ -2,13 +2,11 @@ from flask import Flask, render_template, request
 import requests
 import os
 from flask import current_app
+from twilio.rest import Client
 
 app = Flask(__name__)
 
-app.debug = True
-
 app.config['GOOGLE_MAPS_API_KEY'] = os.environ['GOOGLE_MAPS_API_KEY']
-
 radius = 10000
 
 @app.route('/')
@@ -27,7 +25,7 @@ def hospitals():
         hospitals = []
         for result in data['results']:
             print(result)
-            hospitals.append({'name': result['name'], 'phone': result.get('formatted_phone_number', 'Phone number not available'), 'address': result.get('vicinity', 'Address not available')})
+            hospitals.append({'name': result['name'], 'address': result.get('vicinity', 'Address not available')})
         return render_template('hospitals.html', hospitals=hospitals)
 
 if __name__ == '__main__':
