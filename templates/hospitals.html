@@ -16,7 +16,11 @@
           <input type="hidden" name="hospital_place_id" value="{{ hospital['place_id'] }}">
           <input type="hidden" name="hospital_name" value="{{ hospital['name'] }}">
           <strong>{{ hospital['name'] }}</strong><br>
-          <button type="submit">Call</button>
+          {% if hospital_place_id == hospital['place_id'] and call_made %}
+          <button type="submit">Call again</button><br>
+          {% else %}
+          <button type="submit">Call</button><br>
+          {% endif %}
         </form>
         Address: {{ hospital['address'] }}
       </li>
