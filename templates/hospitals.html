@@ -10,7 +10,7 @@
     {% if hospitals %}
     <ul class="list-vertical">
       {% for hospital in hospitals %}
-      <li>
+      {% if not hospital_place_id or hospital_place_id == hospital['place_id'] %}
         <form action="/call_hospital" method="post">
           <input type="hidden" name="latitude" value="{{ latitude }}">
           <input type="hidden" name="longitude" value="{{ longitude }}">
@@ -18,13 +18,9 @@
           <input type="hidden" name="hospital_name" value="{{ hospital['name'] }}">
           <strong>{{ hospital['name'] }}</strong><br>
           Address: {{ hospital['address'] }}<br>
-          {% if session.hospital_place_id == hospital['place_id'] and session.call_made %}
           <button type="submit">Call again</button><br>
-          {% else %}
-          <button type="submit">Call</button><br>
-          {% endif %}
         </form>
-      </li>
+      {% endif %}
       {% endfor %}
     </ul>
     {% else %}

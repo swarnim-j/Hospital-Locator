@@ -89,10 +89,10 @@ def call_hospital():
                 from_=current_app.config['TWILIO_PHONE_NUMBER']
             )
 
-            return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, call_made=True)
+            return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, latitude=latitude, longitude=longitude)
     except Exception as e:
         print(e)
-        return render_template("hospitals.html", hospitals=[], hospital_place_id=hospital_place_id, call_made=False)
+        return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, latitude=latitude, longitude=longitude)
 
         
 
