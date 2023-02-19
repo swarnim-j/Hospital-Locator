@@ -10,7 +10,14 @@
     <ul>
       {% for hospital in hospitals %}
       <li>
-        <a href="#" onclick="callHospital('{{ hospital['place_id'] }}')"><strong>{{ hospital['name'] }}</strong></a><br>
+        <form action="/call_hospital" method="post">
+          <input type="hidden" name="latitude" value="{{ latitude }}">
+          <input type="hidden" name="longitude" value="{{ longitude }}">
+          <input type="hidden" name="hospital_place_id" value="{{ hospital['place_id'] }}">
+          <input type="hidden" name="hospital_name" value="{{ hospital['name'] }}">
+          <strong>{{ hospital['name'] }}</strong><br>
+          <button type="submit">Call</button>
+        </form>
         Address: {{ hospital['address'] }}
       </li>
       {% endfor %}
