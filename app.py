@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 import requests
 import os
 from flask import current_app
-from twilio.rest import Client
 
 app = Flask(__name__)
 
