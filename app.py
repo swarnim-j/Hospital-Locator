@@ -46,11 +46,10 @@ def call_hospital():
 
         hospital_place_id = request.form['hospital_place_id']
         
-        url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={hospital_place_id}&fields=formatted_phone_number,geometry&key={api_key}"
+        url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={hospital_place_id}&fields=formatted_phone_number,key={api_key}"
         response = requests.get(url)
         data = response.json()
         hospital_phone_number = data["result"]["international_phone_number"]
-        # hospital_location = data["result"]["geometry"]["location"]
 
         message = f"Please send an ambulance to {latitude},{longitude}. This is an emergency"
         # message to be changed such that address is sent instead of lat,lng
