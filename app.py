@@ -42,7 +42,7 @@ def call_hospital():
             latitude = request.form['latitude']
             longitude = request.form['longitude']
             hospital_place_id = request.form['hospital_place_id']
-            hospital_name = request.form['hospital_name']
+            # hospital_name = request.form['hospital_name']
 
             api_key = current_app.config['GOOGLE_MAPS_API_KEY']
             account_sid = current_app.config['TWILIO_ACCOUNT_SID']
@@ -55,6 +55,21 @@ def call_hospital():
             data = response.json()
             address = data["results"][0]["formatted_address"]
 
+            # nearby hospitals
+            url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius={radius}&type=hospital&key={api_key}"
+            response = requests.get(url)
+            data = response.json()
+            hospitals = []
+            for result in data['results']:
+                hospitals.append({'name': result['name'], 'address': result.get('vicinity', 'Address not available'), 'place_id': result['place_id']})
+
+            if hospital_place_id:
+                for i, hospital in enumerate(hospitals):
+                    if hospital['place_id'] == hospital_place_id:
+                        hospitals.pop(i)
+                        hospitals.insert(0, hospital)
+                        break
+
             # phone number of hospital
             url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={hospital_place_id}&fields=international_phone_number&key={api_key}"
             response = requests.get(url)
@@ -64,7 +79,6 @@ def call_hospital():
             print(hospital_phone_number)
 
             message = f"Please send an ambulance as soon as possible to {address}. This is an emergency"
-            # TODO: message to be changed such that address is sent instead of lat,lng
 
             call = client.calls.create(
                 twiml=f'<Response><Say>{message}</Say></Response>',
@@ -73,10 +87,10 @@ def call_hospital():
                 from_=current_app.config['TWILIO_PHONE_NUMBER']
             )
 
-            return render_template("hospitals.html", hospital_place_id=hospital_place_id, call_made=True)
+            return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, call_made=True)
     except Exception as e:
         print(e)
-        return render_template("hospitals.html", hospital_place_id=hospital_place_id, call_made=False)
+        return render_template("hospitals.html", hospitals=hospitals, hospital_place_id=hospital_place_id, call_made=False)
 
         
 

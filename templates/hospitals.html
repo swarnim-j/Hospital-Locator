@@ -3,11 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>Nearby Hospitals</title>
+    <style>
+      .list-vertical{
+        list-style:none;
+        margin: 0 auto;
+        max-width: 600px;
+        text-align: center;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <h1>Nearby Hospitals</h1>
-    {% if hospitals or hospital_place_id %}
-    <ul>
+    {% if hospitals %}
+    <ul class="list-vertical">
       {% for hospital in hospitals %}
       <li>
         <form action="/call_hospital" method="post">
@@ -16,13 +25,13 @@
           <input type="hidden" name="hospital_place_id" value="{{ hospital['place_id'] }}">
           <input type="hidden" name="hospital_name" value="{{ hospital['name'] }}">
           <strong>{{ hospital['name'] }}</strong><br>
+          Address: {{ hospital['address'] }}<br>
           {% if hospital_place_id == hospital['place_id'] and call_made %}
           <button type="submit">Call again</button><br>
           {% else %}
           <button type="submit">Call</button><br>
           {% endif %}
         </form>
-        Address: {{ hospital['address'] }}
       </li>
       {% endfor %}
     </ul>
